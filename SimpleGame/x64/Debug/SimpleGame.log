@@ -1,2 +1,5 @@
-﻿  Renderer.cpp
-  SimpleGame.vcxproj -> F:\BaseProject\x64\Debug\SimpleGame.exe
+﻿  stdafx.cpp
+  Renderer.cpp
+  SimpleGame.cpp
+  코드를 생성하고 있습니다...
+  SimpleGame.vcxproj -> C:\Users\minji\source\repos\Shader_Programming\x64\Debug\SimpleGame.exe

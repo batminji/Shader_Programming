@@ -43,9 +43,37 @@ void Renderer::CreateVertexBufferObjects()
 		-1.f / m_WindowSizeX, -1.f / m_WindowSizeY, 0.f,  1.f / m_WindowSizeX, 1.f / m_WindowSizeY, 0.f, 1.f / m_WindowSizeX, -1.f / m_WindowSizeY, 0.f, //Triangle2
 	};
 
-	glGenBuffers(1, &m_VBORect);
+	glGenBuffers(1, &m_VBORect); // Vertex Buffer Object >> VBO
 	glBindBuffer(GL_ARRAY_BUFFER, m_VBORect);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(rect), rect, GL_STATIC_DRAW);
+
+	// lecture 002
+	float test[]
+		=
+	{
+		0.f , 0.f , 0.f,
+		1.0f, 0.f , 0.f,
+		1.f , 1.f , 0.f
+	};
+
+	/*float test[]
+		=
+	{
+		-0.5f , -0.5f , 0.f,
+		0.5f, -0.5f , 0.f,
+		0.f , 0.5f , 0.f
+	};*/
+
+	glGenBuffers(1, &m_VBOTest);
+	// - 버퍼를 하나 생성
+	// - 생성된 버퍼의 ID를 &m_VBOTest 에 넣어준다.
+	// - 실행 후 m_VBOTest에는 유효한 버퍼 ID 값이 들어 있다.
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTest);
+	// - m_VBOTest 라는 버퍼를 GL_ARRAY_BUFFER 타겟 (VBO용 버퍼 슬롯) 에 바인딩
+	// - 이제부터 GL_ARRAY_BUFFER 를 다루는 모든 명령은 m_VBOTest 버퍼를 대상으로 한다.
+	glBufferData(GL_ARRAY_BUFFER, sizeof(test), test, GL_STATIC_DRAW);
+	// - 오래 걸리는 작업이다.
+
 }
 
 void Renderer::AddShader(GLuint ShaderProgram, const char* pShaderText, GLenum ShaderType)
@@ -188,6 +216,25 @@ void Renderer::DrawSolidRect(float x, float y, float z, float size, float r, flo
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+// lecture 002
+void Renderer::DrawTest()
+{
+	//Program select
+	glUseProgram(m_SolidRectShader);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Trans"), 0, 0, 0, 1);
+	glUniform4f(glGetUniformLocation(m_SolidRectShader, "u_Color"), 1, 0, 0, 1);
+	int attribPosition = glGetAttribLocation(m_SolidRectShader, "a_Position");
+	glEnableVertexAttribArray(attribPosition);
+	glBindBuffer(GL_ARRAY_BUFFER, m_VBOTest);
+	glVertexAttribPointer(
+		attribPosition, 3, GL_FLOAT,
+		GL_FALSE, sizeof(float) * 3, 0);
+	glDrawArrays(GL_TRIANGLES, 0, 3);
+	glDisableVertexAttribArray(attribPosition);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 
 void Renderer::GetGLPosition(float x, float y, float *newX, float *newY)
 {
